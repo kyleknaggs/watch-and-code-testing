@@ -1,0 +1,34 @@
+<script src="../tinytest.js"></script>
+<script src="adder.js"></script>
+<script>
+  // call test fxn
+  // test fxn passes takes in an object as an argument
+  tests({
+    // each object has 2 methods/properties
+    // the name of the property is the name of our test
+    // the value of each of these properties is a fxn & this fxn will run our test
+    // -----
+    // test 1 name: 'adds numbers'
+    // test 1 value: function(){eq(6, add(2, 4));eq(6.6, add(2.6, 4));}
+    'adds numbers': function () {
+      // eq is short for equals
+      // tests to see if two things are equal to each other
+      // if 2 things are equal the test pass else the test fails
+      // -----
+      // comparing the value 6
+      // with the value returned by running the fxn add() with the args 2 & 4
+      eq(6, add(2, 4));
+      // comparing the value 6.6
+      // with the value returned by running the fxn add() with the args 2.6 & 4
+      eq(6.6, add(2.6, 4));
+    },
+    // test 2 name: 'subtracts numbers'
+    // test 2 value: function(){eq(-2, add(2, -4));}
+    'subtracts numbers': function () {
+      // comparing the value of -2 with the value returned by running the fxn add()
+      // with arguments of 2 & -4
+      eq(-2, add(2, -4));
+    },
+
+  });
+</script>
