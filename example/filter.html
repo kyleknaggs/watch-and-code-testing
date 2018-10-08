@@ -1,76 +1,85 @@
 <script src="../tinytest.js"></script>
 <script>
 
+  // borrow from .forEach()
+
   /*
   // Example 1:
-  forEach([1, 2, 3], function () {
-    console.log('Hi');
-  });
+  filter([1,2,3], function() {});
   */
 
   /*
   // Example 2:
-  forEach([1, 2, 3], function (number) {
+  filter([1, 2, 3], function (number) {
     console.log(number);
   });
   */
 
   /*
   // Example 3:
-  forEach([1, 2, 3], function (number, index) {
-    console.log(number);
+  filter([1, 2, 3], function (number, index) {
+    console.log(index);
   });
   */
 
   /*
   // Example 4:
-  forEach([1, 2, 3], function (number, index, originalArray) {
+  fitler([1, 2, 3], function (number, index, originalArray) {
     console.log(originalArray);
   });
   */
 
-  function forEach(array, callback, optionalThisObject) {
+  /*
+  // Example 5:
+  fitler([1, 2, 3], function (number, index, originalArray) {
+    console.log(this.name);
+  }, {name: 'Gordon'});
+  */
 
-    var forEachCallback = callback;
+  /*
+  // Example 6:
+  var testArray = [1,2,3];
+  var filteredArray = filter(testArray, function () {});
+  // Expect testArray !== filteredArray;
+  */
 
-    if (optionalThisObject) {
-      forEachCallback = callback.bind(optionalThisObject);
-    }
+  /*
+  // Example 7:
+  var testArray = [1,2];
+  var filteredArray = filter(testArray, function (element) {
+    return element > 1;
+  });
+  // Expect filteredArray to be [2]
+  */
 
-    for (var i = 0; i < array.length; i++) {
-      forEachCallback(array[i], i, array);
-    }
+  // need to accomodate new functionality
+  // TODO: Review .filter() examples before proceeding on
+
+  function filter(array, callback) {
 
   }
 
   tests({
-    'It should run the callback function array.length times.': function () {
-      var numberOfTimesCallbackHasRun = 0;
-      forEach([1, 2, 3], function () {
-        numberOfTimesCallbackHasRun++;
-      });
-      eq(numberOfTimesCallbackHasRun, 3);
+    'It should run the callback function array.length times': function () {
+      fail();
     },
-    'It should pass the ith element as the first argument to the callback.': function () {
-      forEach([1], function (number) {
-        eq(number, 1);
-      });
+    'It should pass the ith element of the array as the first argument to the callback': function () {
+      fail();
     },
     'It should pass in the ith position as the second argument to the callback': function () {
-      forEach([1], function (number, index) {
-        eq(index, 0);
-      });
+      fail();
     },
-    'It should pass in the original array as the third argument to the callback.': function () {
-      var testArray = [1, 2, 3];
-      forEach(testArray, function (number, index, originalArray) {
-        eq(originalArray, testArray);
-      });
+    'It should pass in the original array as the third argument to the callback': function () {
+      fail();
     },
-    'It should accept an optional this object to use when executing the callback.': function () {
-      forEach([1], function () {
-        eq(this.description, 'I should be accessible inside of the callback');
-      }, { description: 'I should be accessible inside of the callback' });
+    'It should accept an optional this object to use when executing the callback': function () {
+      fail();
+    },
+    'It should return a new array that is different from the array that was passed to the callback': function () {
+      fail();
+    },
+    'It should return a new array that only has elements where callback() is true': function () {
+      fail();
     }
   });
 
