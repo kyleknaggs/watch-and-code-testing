@@ -25,15 +25,18 @@
 
   function reduce(array, callback, initialValue) {
 
-    // Why is accumulator undefined?
-
     var startingIndex = 0;
     var resultSoFar = initialValue;
 
-    // Detects if no initial value
+    // No initial value
     if (arguments.length < 3) {
       resultSoFar = array[startingIndex];
       startingIndex++;
+      // Has initialValue
+    } else {
+      if (Object.keys(array).length === 0) {
+        return initialValue;
+      }
     }
 
     for (var i = startingIndex; i < array.length; i++) {
@@ -85,11 +88,19 @@
       });
     },
     'If no initialValue, callback will start at index 1.': function () {
-      fail();
+      reduce([1, 2], function (accumulator, currentValue, currentIndex) {
+        eq(currentIndex, 1);
+      });
     },
 
     'If initialValue, and array is empty, it should return initialValue without calling callback.': function () {
-      fail();
+      var numberOfTimeCallbackHasRun = 0;
+      var initialValue = 0;
+      var reduceResult = reduce([, ,], function () {
+        numberOfTimeCallbackHasRun++
+      }, initialValue);
+      eq(reduceResult, initialValue);
+      eq(numberOfTimeCallbackHasRun, 0);
     },
     'If no initialValue, and array has one element, it should return that element without calling callback.': function () {
       fail();
