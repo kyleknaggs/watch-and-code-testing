@@ -32,12 +32,12 @@
 
     // Detects if no initial value
     if (arguments.length < 3) {
+      resultSoFar = array[startingIndex];
       startingIndex++;
-      resultSoFar = array[0];
     }
 
     for (var i = startingIndex; i < array.length; i++) {
-      callback(resultSoFar, array[0], i);
+      callback(resultSoFar, array[i], i);
     }
 
   }
@@ -80,10 +80,9 @@
       });
     },
     'If no initialValue, currentValue should start with array[1].': function () {
-      fail();
-      // reduce([1, 2], function (accumulator, currentValue) {
-      //   eq(currentValue, 2);
-      // });
+      reduce([1, 2], function (accumulator, currentValue) {
+        eq(currentValue, 2);
+      });
     },
     'If no initialValue, callback will start at index 1.': function () {
       fail();
