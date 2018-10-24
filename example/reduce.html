@@ -28,11 +28,19 @@
     var startingIndex = 0;
     var resultSoFar = initialValue;
 
-    // No initial value
+    // No initial value.
     if (arguments.length < 3) {
       resultSoFar = array[startingIndex];
       startingIndex++;
-      // Has initialValue
+
+      // If array has one element, just return it.
+      if (Object.keys(array).length === 1) {
+        var singleIndex = Object.keys(array)[0];
+        var singleElement = array[singleIndex];
+        return singleElement;
+      }
+
+      // Has initialValue.
     } else {
       if (Object.keys(array).length === 0) {
         return initialValue;
@@ -40,8 +48,10 @@
     }
 
     for (var i = startingIndex; i < array.length; i++) {
-      callback(resultSoFar, array[i], i);
+      resultSoFar = callback(resultSoFar, array[i], i);
     }
+
+    return resultSoFar;
 
   }
 
@@ -103,11 +113,19 @@
       eq(numberOfTimeCallbackHasRun, 0);
     },
     'If no initialValue, and array has one element, it should return that element without calling callback.': function () {
-      fail();
+      var numberOfTimeCallbackHasRun = 0;
+      var reduceResult = reduce([1], function () {
+        numberOfTimeCallbackHasRun++
+      });
+      eq(reduceResult, 1);
+      eq(numberOfTimeCallbackHasRun, 0);
     },
 
     'It should actually reduce.': function () {
-      fail();
+      var sum = reduce([1, 2, 3], function (a, b) {
+        return a + b;
+      }, 0);
+      eq(sum, 6);
     },
     'It should exclude holes.': function () {
       fail();
