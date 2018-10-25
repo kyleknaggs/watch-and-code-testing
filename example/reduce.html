@@ -28,18 +28,19 @@
     var startingIndex = 0;
     var resultSoFar = initialValue;
     var length = array.length;
+    var arrayIndexes = Object.keys(array);
 
     // No initial value.
     if (arguments.length < 3) {
 
       // If array is empty, throw TypeError
-      if (Object.keys(array).length === 0) {
+      if (arrayIndexes.length === 0) {
         throw new TypeError('Reduce of empty array with no initial value');
       }
 
       // If array has one element, just return it.
-      if (Object.keys(array).length === 1) {
-        var onlyIndex = Object.keys(array)[0];
+      if (arrayIndexes.length === 1) {
+        var onlyIndex = arrayIndexes[0];
         var onlyElement = array[onlyIndex];
         return onlyElement;
       }
@@ -54,12 +55,10 @@
 
       // Has initialValue.
     } else {
-      if (Object.keys(array).length === 0) {
+      if (arrayIndexes.length === 0) {
         return initialValue;
       }
     }
-
-    // use Object.keys(array) to check and see if there is a hole in the array
 
     for (var i = startingIndex; i < length; i++) {
       if (i in array) {
