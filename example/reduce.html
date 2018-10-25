@@ -27,9 +27,15 @@
 
     var startingIndex = 0;
     var resultSoFar = initialValue;
+    var length = array.length;
 
     // No initial value.
     if (arguments.length < 3) {
+
+      // If array is empty, throw TypeError
+      if (Object.keys(array).length === 0) {
+        throw new TypeError('Reduce of empty array with no initial value');
+      }
 
       // If array has one element, just return it.
       if (Object.keys(array).length === 1) {
@@ -39,7 +45,7 @@
       }
 
       // We want to skip holes at the beginning of the array
-      while (startingIndex in array === false) {
+      while (startingIndex in array === false && startingIndex < length) {
         startingIndex++;
       }
 
@@ -55,7 +61,7 @@
 
     // use Object.keys(array) to check and see if there is a hole in the array
 
-    for (var i = startingIndex; i < array.length; i++) {
+    for (var i = startingIndex; i < length; i++) {
       if (i in array) {
         resultSoFar = callback(resultSoFar, array[i], i);
       }
@@ -150,7 +156,13 @@
       eq(sum, 6);
     },
     'If initialValue and array is empty, TypeError should be thrown.': function () {
-      fail();
+      var isTypeError = false;
+      try {
+        reduce([], function () { });
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     },
     'It should pass array as 4th argument to callback.': function () {
       fail();
