@@ -32,13 +32,8 @@
   // });
 
   // Example 4:
-  // forEach([1], function (number, index, originalArray) {
-  //   console.log(originalArray);
-  // });
-
-  // Example 4:
-  // forEach([1], function (number, index, originalArray) {
-  //   console.log(originalArray);
+  // forEach([1], function (number, index, testArray) {
+  //   console.log(testArray);
   // });
 
   // Example 5:
@@ -71,16 +66,18 @@
 
   function forEach(array, callback, optionalThis) {
 
-    var originalCallback = callback;
-    var callbackWithOptionalThis = originalCallback;
+    var forEachCallback = callback;
 
-    // if an optionalThis argument is provided
+    // If an optionalThis argument is provided
     if (optionalThis) {
-      callbackWithOptionalThis = originalCallback.bind(optionalThis);
+      forEachCallback = forEachCallback.bind(optionalThis);
     }
 
     for (var i = 0; i < array.length; i++) {
-      callbackWithOptionalThis(array[i], i, array);
+      // If the current element being processed is not a hole
+      if (i in array) {
+        forEachCallback(array[i], i, array);
+      }
     }
   }
 
@@ -98,29 +95,33 @@
         eq(currentElement, 1);
       });
     },
-    'It should pass in the index of the ith element as the second argument to the callback function.': function () {
+    'It should pass in position i as the second argument to the callback function.': function () {
       forEach([1], function (currentElement, index) {
         eq(index, 0);
       });
     },
-    'It should pass in the array being traversed as the third argument to the callback function.': function () {
-      var originalArray = [1];
-      forEach(originalArray, function (currentElement, index, array) {
-        eq(array, originalArray);
+    'It should pass in the original array as the third argument to the callback function.': function () {
+      var testArray = [1];
+      forEach(testArray, function (currentElement, index, originalArray) {
+        eq(originalArray, testArray);
       });
     },
-    'It should accept an optional this argument to use when executing the callback': function () {
+    'It should accept an optional this object to use when executing the callback.': function () {
       forEach([1], function () {
-        eq(this.name, 'optionalThis');
-      }, { name: 'optionalThis' });
+        eq(this.name, 'I should be accessible inside of the callback.');
+      }, { name: 'I should be accessible inside of the callback.' });
     },
     'It should return undefined': function () {
       var testReturn = forEach([1], function () {
       });
       eq(testReturn, undefined);
     },
-    'It should not run the callback function when there is a hole in the array': function () {
-      fail();
+    'It should not run the callback function when there is a hole in the array.': function () {
+      var numberOfTimesCallbackIsRun = 0;
+      forEach([, 1], function () {
+        numberOfTimesCallbackIsRun++;
+      });
+      eq(numberOfTimesCallbackIsRun, 1);
     },
 
   });
