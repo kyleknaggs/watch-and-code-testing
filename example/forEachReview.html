@@ -1,0 +1,45 @@
+<script src="../tinytest.js"></script>
+<script>
+
+  // Objective: To create a forEach() function whose functionality mirrors that of a native JS .forEach() method
+
+  /*
+  forEach(array, callback(currentValue[, index[, array]]) {
+  }[, thisArg]);
+  */
+
+  // Requirements:
+
+  // Example 1:
+  // [1, 2, 3].forEach(function () {
+  //   console.log('hi');
+  // });
+
+  // Example 2:
+  // [1, 2, 3].forEach(function (number) {
+  //   console.log(number);
+  // });
+
+  function forEach(array, callback) {
+    for (var i = 0; i < array.length; i++) {
+      callback(array[i]);
+    }
+  }
+
+  tests({
+
+    'It should run the callback function array.length times.': function () {
+      var numberOfTimesCallbackIsRun = 0;
+      forEach([1, 2, 3], function () {
+        numberOfTimesCallbackIsRun++;
+      });
+      eq(numberOfTimesCallbackIsRun, 3);
+    },
+    'It should pass in the ith element as the first argument to the callback function.': function () {
+      forEach([1], function (currentElement) {
+        eq(currentElement, 1);
+      });
+    }
+
+  });
+</script>
