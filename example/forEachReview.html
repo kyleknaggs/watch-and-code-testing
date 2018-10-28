@@ -3,26 +3,84 @@
 
   // Objective: To create a forEach() function whose functionality mirrors that of a native JS .forEach() method
 
-  /*
-  forEach(array, callback(currentValue[, index[, array]]) {
-  }[, thisArg]);
-  */
+  // Syntax:
+  // forEach(array, callback(currentValue[, index[, array]]) {
+  // }[, thisArg]);
+
+  // callback parameters:
+  // currentValue
+  // index
+  // array
+
+  // Returns undefined
 
   // Requirements:
 
   // Example 1:
-  // [1, 2, 3].forEach(function () {
+  // forEach([1, 2, 3], function () {
   //   console.log('hi');
   // });
 
   // Example 2:
-  // [1, 2, 3].forEach(function (number) {
+  // forEach([1], function (number) {
   //   console.log(number);
   // });
 
-  function forEach(array, callback) {
+  // Example 3:
+  // forEach([1], function (number, index) {
+  //   console.log(index);
+  // });
+
+  // Example 4:
+  // forEach([1], function (number, index, originalArray) {
+  //   console.log(originalArray);
+  // });
+
+  // Example 4:
+  // forEach([1], function (number, index, originalArray) {
+  //   console.log(originalArray);
+  // });
+
+  // Example 5:
+  // forEach([1], function () {
+  //   console.log(this.name);
+  // }, {name: 'optionalThis'});
+
+  // Example 6:
+  // var testReturn = forEach([1], function () {});
+
+  // Example 7 (Bonus):
+  // forEach([,1], function () {
+  //   console.log('hi');
+  // });
+
+  // Description:
+
+  // forEach() executes the provided callback once for each element present in the array in ascending order.
+
+  // the first argument passed to callback() is the currentValue in the array
+  // the second argument passed to callback() is the index of the element being processed
+  // the third argument passed to callback() is the array being traversed by forEach()
+
+  // if a thisArg parameter is provided to forEach(), it will be used as callback's this value
+
+  // forEach() always returns the value undefined
+
+  // Bonus requirement:
+  // It is not invoked for indexes where there is a hole in the array
+
+  function forEach(array, callback, optionalThis) {
+
+    var originalCallback = callback;
+    var callbackWithOptionalThis = originalCallback;
+
+    // if an optionalThis argument is provided
+    if (optionalThis) {
+      callbackWithOptionalThis = originalCallback.bind(optionalThis);
+    }
+
     for (var i = 0; i < array.length; i++) {
-      callback(array[i]);
+      callbackWithOptionalThis(array[i], i, array);
     }
   }
 
@@ -39,7 +97,31 @@
       forEach([1], function (currentElement) {
         eq(currentElement, 1);
       });
-    }
+    },
+    'It should pass in the index of the ith element as the second argument to the callback function.': function () {
+      forEach([1], function (currentElement, index) {
+        eq(index, 0);
+      });
+    },
+    'It should pass in the array being traversed as the third argument to the callback function.': function () {
+      var originalArray = [1];
+      forEach(originalArray, function (currentElement, index, array) {
+        eq(array, originalArray);
+      });
+    },
+    'It should accept an optional this argument to use when executing the callback': function () {
+      forEach([1], function () {
+        eq(this.name, 'optionalThis');
+      }, { name: 'optionalThis' });
+    },
+    'It should return undefined': function () {
+      var testReturn = forEach([1], function () {
+      });
+      eq(testReturn, undefined);
+    },
+    'It should not run the callback function when there is a hole in the array': function () {
+      fail();
+    },
 
   });
 </script>
