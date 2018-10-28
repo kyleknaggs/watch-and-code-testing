@@ -74,13 +74,16 @@
     var originalCallback = callback;
     var callbackWithOptionalThis = originalCallback;
 
-    // if an optionalThis argument is provided
+    // If an optionalThis argument is provided
     if (optionalThis) {
       callbackWithOptionalThis = originalCallback.bind(optionalThis);
     }
 
     for (var i = 0; i < array.length; i++) {
-      callbackWithOptionalThis(array[i], i, array);
+      // If the current element being processed is not a hole
+      if (i in array) {
+        callbackWithOptionalThis(array[i], i, array);
+      }
     }
   }
 
@@ -120,7 +123,11 @@
       eq(testReturn, undefined);
     },
     'It should not run the callback function when there is a hole in the array': function () {
-      fail();
+      var numberOfTimesCallbackIsRun = 0;
+      forEach([, 1], function () {
+        numberOfTimesCallbackIsRun++;
+      });
+      eq(numberOfTimesCallbackIsRun, 1);
     },
 
   });
