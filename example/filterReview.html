@@ -17,55 +17,60 @@
   // Examples:
 
   // Example 1:
+  // It should run callback array.length times.
   // filter([1, 2, 3], function () {
-  //   return true;
   // });
 
   // Example 2:
-  // filter([1, 2, 3], function (number) {
-  //   return number;
+  // It should pass in the ith element of the array as the first argument to callback() function.
+  // filter([1, 2, 3], function (currentElement) {
+  //   return currentElement;
   // });
 
   // Example 3:
-  // filter([1, 2, 3], function (number, index) {
+  // It should pass in position i as the second argument to callback.
+  // filter([1, 2, 3], function (currentElement, index) {
   //   return index;
   // });
 
   // Example 4:
-  // filter([1, 2, 3], function (number, index, array) {
+  // It should pass in the original array as the third argument to callback.
+  // filter([1, 2, 3], function (currentElement, index, array) {
   //   return array;
   // });
 
   // Example 5:
-  // filter([1], function (number) {
+  // It should accept an optionnal this argument to use when executing callback.
+  // filter([1], function (currentElement) {
   //   return this.key;
   // }, {key: 'This is the optional this object.'});
 
   // Example 6:
+  // It should not mutate the original array.
+  // It should return a new array.
   // var originalArray = [1];
-  // var newArray = filter(originalArray, function (number) {
-  //   return number;
+  // var filteredArray = filter(originalArray, function (currentElement) {
+  //   return currentElement;
   // });
+  // Expect filteredArray !== originalArray
 
   // Example 7:
-  // var originalArray = [1];
-  // var newArray = filter(originalArray, function (number) {
-  //   return number;
+  // It should only return elements that return a truthy value when passed to callback.
+  // var filteredArray = filter([1,2], function (currentElement) {
+  //   return currentElement > 1;
   // });
+  // Expect filteredArray to be [2]
 
-  // Example 8:
-  // var newArray = filter([1,2], function (number) {
-  //   return number > 1;
-  // });
-
-  // Example 9
-  // var newArray = filter([,1], function (number) {
+  // Example 8
+  // It should not run callback when there is a hole in the array.
+  // var filteredArray = filter([,1], function (currentElement) {
   //   return true;
   // });
+  // Expect filteredArray to be [1]
 
-  function filter(array, callback, optionalThis) {
+  function filter(originalArray, callback, optionalThis) {
 
-    var newArray = [];
+    var filteredArray = [];
     var filterCallback = callback;
 
     // If optionalThis is passed to the function
@@ -73,71 +78,70 @@
       filterCallback = filterCallback.bind(optionalThis);
     }
 
-    for (var i = 0; i < array.length; i++) {
-      // If current element is not a hole run the callback function
-      if (i in array) {
+    for (var i = 0; i < originalArray.length; i++) {
+      // If currentElement is not a hole run callback
+      if (i in originalArray) {
         // If currentElement returns truthy value when passed to callback
-        if (filterCallback(array[i], i, array)) {
-          newArray.push(array[i]);
+        if (filterCallback(originalArray[i], i, originalArray)) {
+          filteredArray.push(originalArray[i]);
         }
       }
     }
 
-    return newArray;
+    return filteredArray;
 
   }
 
   tests({
-    'It should run the callback function array.length times.': function () {
+    'It should run callback array.length times.': function () {
       var numberOfTimesCallbackIsRun = 0;
       filter([1, 2, 3], function () {
         numberOfTimesCallbackIsRun++;
       });
       eq(numberOfTimesCallbackIsRun, 3);
     },
-    'It should pass in the ith element as the first argument to the callback function.': function () {
+    'It should pass in the ith element as the first argument to callback.': function () {
       filter([1], function (currentElement) {
         eq(currentElement, 1);
       });
     },
-    'It should pass in position i as the second argument to the callback function.': function () {
+    'It should pass in position i as the second argument to callback.': function () {
       filter([1], function (currentElement, index) {
         eq(index, 0);
       });
     },
-    'It should pass in the original array as the third argument to the callback function.': function () {
+    'It should pass in the original array as the third argument to callback.': function () {
       var testArray = [1];
       filter(testArray, function (currentElement, index, originalArray) {
         eq(originalArray, testArray);
       });
     },
-    'It should accept an optional this object to use when executing the callback.': function () {
+    'It should accept an optional this object to use when executing callback.': function () {
       filter([1], function () {
-        eq(this.name, 'I should be accessible inside of the callback.');
-      }, { name: 'I should be accessible inside of the callback.' });
+        eq(this.name, 'I should be accessible inside of callback.');
+      }, { name: 'I should be accessible inside of callback.' });
     },
     'It should not mutate the original array.': function () {
-      var originalArray = [1];
-      var duplicateArray = originalArray;
-      var newArray = filter(originalArray, function (number) {
+      var arrayBeingFiltered = [1];
+      var filteredArray = filter(arrayBeingFiltered, function (number) {
         return number;
       });
-      eq(originalArray, duplicateArray);
+      eq(arrayBeingFiltered !== filteredArray, true);
     },
     'It should return a new array.': function () {
-      var newArray = filter([1], function (number) {
+      var filteredArray = filter([1], function (number) {
         return number;
       });
-      eq(Array.isArray(newArray), true);
+      eq(Array.isArray(filteredArray), true);
     },
-    'It should only return elements that evaluate to truthy when passed to the callback function.': function () {
-      var newArray = filter([1, 2], function (number) {
+    'It should only return elements that return a truthy value when passed to callback.': function () {
+      var filteredArray = filter([1, 2], function (number) {
         return number > 1;
       });
-      eq(newArray.length, 1);
-      eq(newArray[0], 2);
+      eq(filteredArray.length, 1);
+      eq(filteredArray[0], 2);
     },
-    'It should not run the callback function when there is a hole in the array.': function () {
+    'It should not run callback when there is a hole in the array.': function () {
       var numberOfTimesCallbackIsRun = 0;
       filter([, 1], function () {
         numberOfTimesCallbackIsRun++;
