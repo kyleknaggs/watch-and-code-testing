@@ -1,0 +1,136 @@
+<script src="../tinytest.js"></script>
+<script>
+
+  // Objective: To create a forEach() function whose functionality mirrors that of a native JS .forEach() method
+
+  // Syntax:
+  // forEach(array, callback(currentValue[, index[, array]]) {
+  // }[, thisArg]);
+
+  // callback parameters:
+  // currentValue
+  // index
+  // array
+
+  // Returns undefined
+
+  // Requirements:
+
+  // Example 1:
+  // forEach([1, 2, 3], function () {
+  //   console.log('hi');
+  // });
+
+  // Example 2:
+  // forEach([1], function (number) {
+  //   console.log(number);
+  // });
+
+  // Example 3:
+  // forEach([1], function (number, index) {
+  //   console.log(index);
+  // });
+
+  // Example 4:
+  // forEach([1], function (number, index, testArray) {
+  //   console.log(testArray);
+  // });
+
+  // Example 5:
+  // forEach([1], function () {
+  //   console.log(this.name);
+  // }, {name: 'optionalThis'});
+
+  // Example 6:
+  // var testReturn = forEach([1], function () {});
+
+  // Example 7 (Bonus):
+  // forEach([,1], function () {
+  //   console.log('hi');
+  // });
+
+  // Description:
+
+  // forEach() executes the provided callback once for each element present in the array in ascending order.
+
+  // the first argument passed to callback() is the currentValue in the array
+  // the second argument passed to callback() is the index of the element being processed
+  // the third argument passed to callback() is the array being traversed by forEach()
+
+  // if a thisArg parameter is provided to forEach(), it will be used as callback's this value
+
+  // forEach() always returns the value undefined
+
+  // Bonus requirement:
+  // It is not invoked for indexes where there is a hole in the array
+
+  function forEach(array, callback, optionalThis) {
+
+    var forEachCallback = callback;
+
+    // If an optionalThis argument is provided
+    if (optionalThis) {
+      forEachCallback = forEachCallback.bind(optionalThis);
+    }
+
+    for (var i = 0; i < array.length; i++) {
+      // If the current element being processed is not a hole
+      if (i in array) {
+<<<<<<< HEAD
+        forEachCallback(array[i], i, array);
+=======
+        callbackWithOptionalThis(array[i], i, array);
+>>>>>>> ccb655f4720f11709a4fd100d6106cc0431433c1
+      }
+    }
+  }
+
+  tests({
+
+    'It should run the callback function array.length times.': function () {
+      var numberOfTimesCallbackIsRun = 0;
+      forEach([1, 2, 3], function () {
+        numberOfTimesCallbackIsRun++;
+      });
+      eq(numberOfTimesCallbackIsRun, 3);
+    },
+    'It should pass in the ith element as the first argument to the callback function.': function () {
+      forEach([1], function (currentElement) {
+        eq(currentElement, 1);
+      });
+    },
+    'It should pass in position i as the second argument to the callback function.': function () {
+      forEach([1], function (currentElement, index) {
+        eq(index, 0);
+      });
+    },
+    'It should pass in the original array as the third argument to the callback function.': function () {
+      var testArray = [1];
+      forEach(testArray, function (currentElement, index, originalArray) {
+        eq(originalArray, testArray);
+      });
+    },
+    'It should accept an optional this object to use when executing the callback.': function () {
+      forEach([1], function () {
+        eq(this.name, 'I should be accessible inside of the callback.');
+      }, { name: 'I should be accessible inside of the callback.' });
+    },
+    'It should return undefined': function () {
+      var testReturn = forEach([1], function () {
+      });
+      eq(testReturn, undefined);
+    },
+<<<<<<< HEAD
+    'It should not run the callback function when there is a hole in the array.': function () {
+=======
+    'It should not run the callback function when there is a hole in the array': function () {
+>>>>>>> ccb655f4720f11709a4fd100d6106cc0431433c1
+      var numberOfTimesCallbackIsRun = 0;
+      forEach([, 1], function () {
+        numberOfTimesCallbackIsRun++;
+      });
+      eq(numberOfTimesCallbackIsRun, 1);
+    },
+
+  });
+</script>
