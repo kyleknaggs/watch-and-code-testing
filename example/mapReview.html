@@ -16,51 +16,50 @@
 
   // Examples:
 
-  // Example 1:
+  // Example 1: Callback should be run array.length times.
   // map([1, 2, 3], function () {
   // });
 
-  // Example 2:
+  // Example 2: Callback should have access to ith element.
   // map([1, 2, 3], function (currentElement) {
   //   return currentElement;
   // });
 
-  // Example 3:
+  // Example 3: Callback should have access to index.
   // map([1, 2, 3], function (currentElement, index) {
   //   return index;
   // });
 
-  // Example 4:
+  // Example 4: Callback should have access to the original array.
   // map([1, 2, 3], function (currentElement, index, array) {
   //   return array;
   // });
 
-  // Example 5:
+  // Example 5: Callback should have access to a configurable this object.
   // map([1], function (currentElement) {
   //   return this.key;
   // }, {key: 'This is an optional this object.'});
 
-  // Examples 6 & 7:
+  // Examples 6 & 7: map() should not mutatue the original array and instead, return a new array .
   // var originalArray = [1];
   // var mappedArray = map(originalArray, function (currentElement) {
   //   return currentElement;
   // });
   // Expect mappedArray !== originalArray
 
-  // Example 8:
+  // Example 8: map() should transform the values of the original array and store the resulting values in a the returned array.
   // var mappedArray = filter([1,2,3], function (currentElement) {
   //   return currentElement * 2 ;
   // });
   // Expect mappedArray to be [2,4,6]
 
-  // Example 9
-  // It should not run callback when there is a hole in the array.
+  // Example 9: Callback should not run when there is a hole in the array.
   // var mappedArray = filter([,1], function (currentElement) {
   //   return currentElement;
   // });
   // Expect mappedArray to be [1]
 
-  function map(array, callback, optionalThis) {
+  function map(originalArray, callback, optionalThis) {
 
     var mapCallback = callback;
     var mappedArray = [];
@@ -70,10 +69,10 @@
       mapCallback = mapCallback.bind(optionalThis);
     }
 
-    for (var i = 0; i < array.length; i++) {
-      // If the ith element in the array has an assigned value
-      if (i in array) {
-        mappedArray.push(mapCallback(array[i], i, array));
+    for (var i = 0; i < originalArray.length; i++) {
+      // If the ith element in the originalArray has an assigned value
+      if (i in originalArray) {
+        mappedArray[i] = mapCallback(originalArray[i], i, originalArray);
       }
     }
 
@@ -94,7 +93,7 @@
         eq(currentElement, 1);
       });
     },
-    'It should pass in position i as the second argument to callback.': function () {
+    'It should pass ith position as the second argument to callback.': function () {
       map([1], function (currentElement, index) {
         eq(index, 0);
       });
@@ -110,33 +109,40 @@
         eq(this.name, 'I should be accessible inside of callback.');
       }, { name: 'I should be accessible inside of callback.' });
     },
-    'It should not mutate the original array.': function () {
-      var arrayBeingMapped = [1];
-      var mappedArray = map(arrayBeingMapped, function (number) {
-        return number;
-      });
-      eq(arrayBeingMapped !== mappedArray, true);
-    },
-    'It should return a new array.': function () {
-      var mappedArray = map([1], function (number) {
-        return number;
+    'It should return an array.': function () {
+      var mappedArray = map([1], function (currentElement) {
+        return currentElement;
       });
       eq(Array.isArray(mappedArray), true);
     },
-    'It should return transformed values that are the result of passing the values in original array to callback.': function () {
-      var mappedArray = map([1, 2], function (number) {
-        return number * 2;
+    'It should return a new array, not the original array.': function () {
+      var arrayBeingMapped = [1];
+      var mappedArray = map(arrayBeingMapped, function (currentElement) {
+        return currentElement;
+      });
+      eq(arrayBeingMapped !== mappedArray, true);
+    },
+    'It should return a new array of elements that have been transformed by callback.': function () {
+      var mappedArray = map([1, 2], function (currentElement) {
+        return currentElement * 2;
       });
       eq(mappedArray.length, 2);
       eq(mappedArray[0], 2);
       eq(mappedArray[1], 4);
     },
-    'It should not run callback when there is a hole in the array.': function () {
+    'It should not call callback on unassinged indexes.': function () {
       var numberOfTimesCallbackIsRun = 0;
-      map([, 1], function () {
+      map([, 1], function (currentElement) {
         numberOfTimesCallbackIsRun++;
       });
       eq(numberOfTimesCallbackIsRun, 1);
+    },
+    'It should transform unassigned indexes in the original array to empty.': function () {
+      var mappedArray = map([, 1], function (currentElement) {
+        return currentElement * 2;
+      });
+      eq(0 in mappedArray, false);
+      eq(mappedArray[1], 2);
     },
   });
 </script>
