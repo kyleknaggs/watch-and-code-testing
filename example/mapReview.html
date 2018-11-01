@@ -60,109 +60,83 @@
   // });
   // Expect mappedArray to be [1]
 
-  /*
-  function map() {
+  function map(array, callback, optionalThis) {
+
+    var mapCallback = callback;
+    var mappedArray = [];
+
+    // If passed a configurable this object.
+    if (optionalThis) {
+      mapCallback = mapCallback.bind(optionalThis);
+    }
+
+    for (var i = 0; i < array.length; i++) {
+      // If the ith element in the array has an assigned value
+      if (i in array) {
+        mappedArray.push(mapCallback(array[i], i, array));
+      }
+    }
+
+    return mappedArray;
+
   }
-  */
 
   tests({
     'It should run callback array.length times.': function () {
-      fail();
-      /*
       var numberOfTimesCallbackIsRun = 0;
-      filter([1, 2, 3], function () {
+      map([1, 2, 3], function () {
         numberOfTimesCallbackIsRun++;
       });
       eq(numberOfTimesCallbackIsRun, 3);
-      */
     },
-
-    // --------------
-
-    'It should pass in the ith element as the first argument to callback.': function () {
-      fail();
-      /*
-      filter([1], function (currentElement) {
+    'It should pass in the ith element of the array as the first argument to callback.': function () {
+      map([1], function (currentElement) {
         eq(currentElement, 1);
       });
-      */
     },
     'It should pass in position i as the second argument to callback.': function () {
-      fail();
-      /*
-      filter([1], function (currentElement, index) {
+      map([1], function (currentElement, index) {
         eq(index, 0);
       });
-      */
     },
     'It should pass in the original array as the third argument to callback.': function () {
-      fail();
-      /*
       var testArray = [1];
-      filter(testArray, function (currentElement, index, originalArray) {
+      map(testArray, function (currentElement, index, originalArray) {
         eq(originalArray, testArray);
       });
-      */
     },
-
-    // --------------
-
     'It should accept an optional this object to use when executing callback.': function () {
-      fail();
-      /*
-      filter([1], function () {
+      map([1], function () {
         eq(this.name, 'I should be accessible inside of callback.');
       }, { name: 'I should be accessible inside of callback.' });
-      */
     },
-
-    // --------------
-
     'It should not mutate the original array.': function () {
-      fail();
-      /*
-      var arrayBeingFiltered = [1];
-      var filteredArray = filter(arrayBeingFiltered, function (number) {
+      var arrayBeingMapped = [1];
+      var mappedArray = map(arrayBeingMapped, function (number) {
         return number;
       });
-      eq(arrayBeingFiltered !== filteredArray, true);
-      */
+      eq(arrayBeingMapped !== mappedArray, true);
     },
     'It should return a new array.': function () {
-      fail();
-      /*
-      var filteredArray = filter([1], function (number) {
+      var mappedArray = map([1], function (number) {
         return number;
       });
-      eq(Array.isArray(filteredArray), true);
-      */
+      eq(Array.isArray(mappedArray), true);
     },
-
-    // --------------
-
     'It should return transformed values that are the result of passing the values in original array to callback.': function () {
-      fail();
-      /*
-      var filteredArray = filter([1, 2], function (number) {
-        return number > 1;
+      var mappedArray = map([1, 2], function (number) {
+        return number * 2;
       });
-      eq(filteredArray.length, 1);
-      eq(filteredArray[0], 2);
-      */
+      eq(mappedArray.length, 2);
+      eq(mappedArray[0], 2);
+      eq(mappedArray[1], 4);
     },
-
-    // --------------
-
     'It should not run callback when there is a hole in the array.': function () {
-      fail();
-      /*
       var numberOfTimesCallbackIsRun = 0;
-      filter([, 1], function () {
+      map([, 1], function () {
         numberOfTimesCallbackIsRun++;
       });
       eq(numberOfTimesCallbackIsRun, 1);
-      */
     },
-
   });
 </script>
