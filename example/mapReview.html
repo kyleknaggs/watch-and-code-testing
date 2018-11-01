@@ -1,0 +1,168 @@
+<script src="../tinytest.js"></script>
+<script>
+
+  // Objective: To create a map() function whose functionality mirrors that of a native JS .map() method
+
+  // Syntax:
+  // map(array, callback(currentValue[, index[, array]]){
+  // }[, thisArg])
+
+  // callback parameters:
+  // currentValue
+  // [index]
+  // [array]
+
+  // Return Value: A new array where each element in the new array is the result of passing the corresponding element in the original array to the callback function.
+
+  // Examples:
+
+  // Example 1:
+  // map([1, 2, 3], function () {
+  // });
+
+  // Example 2:
+  // map([1, 2, 3], function (currentElement) {
+  //   return currentElement;
+  // });
+
+  // Example 3:
+  // map([1, 2, 3], function (currentElement, index) {
+  //   return index;
+  // });
+
+  // Example 4:
+  // map([1, 2, 3], function (currentElement, index, array) {
+  //   return array;
+  // });
+
+  // Example 5:
+  // map([1], function (currentElement) {
+  //   return this.key;
+  // }, {key: 'This is an optional this object.'});
+
+  // Examples 6 & 7:
+  // var originalArray = [1];
+  // var mappedArray = map(originalArray, function (currentElement) {
+  //   return currentElement;
+  // });
+  // Expect mappedArray !== originalArray
+
+  // Example 8:
+  // var mappedArray = filter([1,2,3], function (currentElement) {
+  //   return currentElement * 2 ;
+  // });
+  // Expect mappedArray to be [2,4,6]
+
+  // Example 9
+  // It should not run callback when there is a hole in the array.
+  // var mappedArray = filter([,1], function (currentElement) {
+  //   return currentElement;
+  // });
+  // Expect mappedArray to be [1]
+
+  /*
+  function map() {
+  }
+  */
+
+  tests({
+    'It should run callback array.length times.': function () {
+      fail();
+      /*
+      var numberOfTimesCallbackIsRun = 0;
+      filter([1, 2, 3], function () {
+        numberOfTimesCallbackIsRun++;
+      });
+      eq(numberOfTimesCallbackIsRun, 3);
+      */
+    },
+
+    // --------------
+
+    'It should pass in the ith element as the first argument to callback.': function () {
+      fail();
+      /*
+      filter([1], function (currentElement) {
+        eq(currentElement, 1);
+      });
+      */
+    },
+    'It should pass in position i as the second argument to callback.': function () {
+      fail();
+      /*
+      filter([1], function (currentElement, index) {
+        eq(index, 0);
+      });
+      */
+    },
+    'It should pass in the original array as the third argument to callback.': function () {
+      fail();
+      /*
+      var testArray = [1];
+      filter(testArray, function (currentElement, index, originalArray) {
+        eq(originalArray, testArray);
+      });
+      */
+    },
+
+    // --------------
+
+    'It should accept an optional this object to use when executing callback.': function () {
+      fail();
+      /*
+      filter([1], function () {
+        eq(this.name, 'I should be accessible inside of callback.');
+      }, { name: 'I should be accessible inside of callback.' });
+      */
+    },
+
+    // --------------
+
+    'It should not mutate the original array.': function () {
+      fail();
+      /*
+      var arrayBeingFiltered = [1];
+      var filteredArray = filter(arrayBeingFiltered, function (number) {
+        return number;
+      });
+      eq(arrayBeingFiltered !== filteredArray, true);
+      */
+    },
+    'It should return a new array.': function () {
+      fail();
+      /*
+      var filteredArray = filter([1], function (number) {
+        return number;
+      });
+      eq(Array.isArray(filteredArray), true);
+      */
+    },
+
+    // --------------
+
+    'It should return transformed values that are the result of passing the values in original array to callback.': function () {
+      fail();
+      /*
+      var filteredArray = filter([1, 2], function (number) {
+        return number > 1;
+      });
+      eq(filteredArray.length, 1);
+      eq(filteredArray[0], 2);
+      */
+    },
+
+    // --------------
+
+    'It should not run callback when there is a hole in the array.': function () {
+      fail();
+      /*
+      var numberOfTimesCallbackIsRun = 0;
+      filter([, 1], function () {
+        numberOfTimesCallbackIsRun++;
+      });
+      eq(numberOfTimesCallbackIsRun, 1);
+      */
+    },
+
+  });
+</script>
